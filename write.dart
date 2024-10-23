@@ -1,161 +1,55 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
+class WriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ASSIST', style: TextStyle(color: Colors.black)),
+        title: Text('감정 선택', style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications_none, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '2024.07.23',
-              style: TextStyle(fontSize: 18, color: Colors.grey[700]),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'OO님, 오늘 어떤 감정이 들었나요?',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
+            Text('오늘의 감정을 선택하세요', style: TextStyle(fontSize: 18)),
             SizedBox(height: 20),
             Wrap(
               spacing: 10,
               runSpacing: 10,
               children: [
-                _buildEmotionButton('행복해요', Colors.yellow),
-                _buildEmotionButton('슬퍼요', Colors.blue),
-                _buildEmotionButton('화나요', Colors.red),
-                _buildEmotionButton('지쳤어요', Colors.grey),
-                _buildEmotionButton('감사해요', Colors.orange),
-                _buildEmotionButton('두려워요', Colors.indigo),
-                _buildEmotionButton('평안해요', Colors.white),
-                _buildEmotionButton('사랑해요', Colors.pink),
+                _buildEmotionOption(context, '행복해요'),
+                _buildEmotionOption(context, '슬퍼요'),
+                _buildEmotionOption(context, '화나요'),
+                _buildEmotionOption(context, '지쳤어요'),
+                _buildEmotionOption(context, '감사해요'),
+                _buildEmotionOption(context, '두려워요'),
+                _buildEmotionOption(context, '평안해요'),
+                _buildEmotionOption(context, '사랑해요'),
               ],
             ),
-            SizedBox(height: 20),
-            Center(
-              child: Container(
-                height: 200,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Center(
-                  child: Text('감정 분석표', style: TextStyle(fontSize: 20)),
-                ),
-              ),
-            ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => DiaryWriteScreen()),
-            );
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.edit),
-            label: '일기 쓰기',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '홈',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: '일기 보기',
-          ),
-        ],
       ),
     );
   }
 
-  Widget _buildEmotionButton(String label, Color color) {
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
+  Widget _buildEmotionOption(BuildContext context, String emotion) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context, emotion); // 선택된 감정을 반환
+      },
+      child: Container(
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          shape: BoxShape.circle,
         ),
-      ),
-    );
-  }
-}
-
-class DiaryWriteScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('일기 쓰기', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '오늘의 감정',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: '오늘의 감정을 기록하세요',
-              ),
-              maxLines: 5,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Save diary entry logic
-              },
-              child: Text('저장하기'),
-            ),
-          ],
+        child: Center(
+          child: Text(emotion, textAlign: TextAlign.center),
         ),
       ),
     );
