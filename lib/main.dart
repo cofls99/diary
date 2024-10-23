@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'write.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +15,38 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String? selectedEmotion; // 선택된 감정을 저장
+
+  void updateEmotion(String emotion) {
+    setState(() {
+      selectedEmotion = emotion; // 선택된 감정 업데이트
+    });
+  }
+
+  double _getSizeForEmotion(String emotion) {
+    if (selectedEmotion == emotion) {
+      return 120; // 선택된 감정의 크기
+    }
+    return 80; // 기본 크기
+  }
+
+  void _navigateToWriteScreen() async {
+    final selectedEmotion = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => WriteScreen()),
+    );
+
+    if (selectedEmotion != null) {
+      updateEmotion(selectedEmotion);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,6 +109,11 @@ class HomeScreen extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
+        onTap: (index) {
+          if (index == 0) {
+            _navigateToWriteScreen();
+          }
+        },
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.edit),
@@ -96,18 +133,24 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildEmotionButton(String label, Color color) {
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
+    return GestureDetector(
+      onTap: () {
+        updateEmotion(label); // 감정 선택 시 업데이트
+      },
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        width: _getSizeForEmotion(label),
+        height: _getSizeForEmotion(label),
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
     );
